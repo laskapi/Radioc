@@ -1,0 +1,94 @@
+﻿@model StationsVM
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+
+
+<div class="row" id="title">
+	<div class="column centered">
+		<h1>Welcome to Radioc</h1>
+		<form asp-controller="Home" asp-action="Index" method="get">
+			<p>
+				<label><b>Search by station</b> <input type="text" asp-for="SearchString" /></label>
+				<input type="submit" value="Filter" />
+			</p>
+		</form>
+	</div>
+	<div class="column centered">
+		<audio controls id="player"></audio>
+	</div>
+
+</div>
+<div>
+
+
+
+	@* <a asp-action="Create">Create New</a> *@
+</div>
+
+<div class="row">
+	<div class="column">
+
+
+		<table class="table table-sm table-hover">
+			<thead class="table-light">
+				<tr>
+					<th class="centered">
+					Name
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Stations)
+				{
+
+					<tr class="station">
+						<td>
+							<div onclick="play(this,'@item.Url')">
+								@Html.DisplayFor(modelItem => item.Name)
+							</div>
+						</td>
+
+						<td>
+							@Html.ActionLink("Add", "Add", new { /* id=item.PrimaryKey */ }) @* | *@
+							@* 		
+							@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+							@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+							@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+ *@					
+</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+	<div class="column">
+
+		<table class="table table-sm table-hover">
+			<thead class="table-light">
+				<tr>
+					<th width="100%" class="centered">
+					My Favorites		
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td >
+						<div>
+							header
+						</div>
+					</td>
+					<td>
+						@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</div>
