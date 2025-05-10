@@ -1,29 +1,109 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
+using Radioc.Areas.Identity.Data;
 using Radioc.Clients;
+using Radioc.Data;
 using Radioc.Models;
 
 namespace Radioc.Controllers
 {
-    public class HomeController(ILogger<HomeController> logger,RadioBrowserClient client) : Controller
+    //  [Authorize]
+    public class HomeController(ILogger<HomeController> logger, RadioBrowserClient client,
+        ApplicationDbContext dbContext, UserManager<RadiocUser> userManager) : Controller
     {
         private readonly ILogger<HomeController> _logger = logger;
         private readonly RadioBrowserClient _radioBrowserClient = client;
+        private readonly ApplicationDbContext _dbContext = dbContext;
+        private readonly UserManager<RadiocUser> _userManager = userManager;
+
 
         public async Task<IActionResult> Index(string SearchString)
         {
 
+            //StationsVM stationsVM = new StationsVM();
+
             var stations = await _radioBrowserClient.FindStationsAsync(SearchString);
+
             var stationsVM = new StationsVM
             {
-                SearchString = SearchString,
-                Stations = stations ?? Array.Empty<Station>()
+                Stations = stations ?? Array.Empty<Station>(),
+                SearchString = SearchString
             };
 
-             return View(stationsVM);
+            var identity = User.Identity != null ? User.Identity.IsAuthenticated : false;
+            ViewBag.LoggedIn = false;
+
+            if (identity)
+            {
+                var id = _userManager.GetUserId(User);
+                var favorites = from f in _dbContext.FavoriteStations
+                                where f.RadiocUserId == id
+                                select f;
+                stationsVM.Favorites = await favorites.ToListAsync();
+
+                ViewBag.LoggedIn = true;
+            }
+            _logger.LogInformation("favorite stations count: " + stationsVM.Favorites.Count());
+            return View("Index", stationsVM);
         }
 
-      
+        [HttpPost]
+        public async Task<IActionResult> Add(string searchString, string url, string name)
+        {
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+
+                var IsAddedAlready = !(from f in _dbContext.FavoriteStations
+                                       where f.Url == url && f.RadiocUserId == user.Id
+                                       select f).IsNullOrEmpty();
+
+                if (!IsAddedAlready)
+                {
+                    var favorite = new FavoriteStation { Name = name, Url = url, RadiocUserId = user.Id, RadiocUser = user };
+                    var result = await _dbContext.FavoriteStations.AddAsync(favorite);
+                    _dbContext.SaveChanges();
+                    _logger.LogInformation("Added Radio: " + result.ToString());
+                }
+            }
+
+            return await Index(searchString);
+
+        }
+        public async Task<IActionResult> Delete(string searchString, string name)
+        {
+
+            var user = await _userManager.GetUserAsync(User);
+            //    var station = stationsVM.Stations.FirstOrDefault(s => s.Name.Equals(name));
+
+
+            if (user != null)
+            {
+                var resolvedStations = (from f in _dbContext.FavoriteStations
+                                        where f.Name == name && f.RadiocUserId == user.Id
+                                        select f).ToHashSet();
+
+
+
+                if (resolvedStations.Count > 0)
+                {
+
+                    _dbContext.FavoriteStations.RemoveRange(resolvedStations);
+                    _dbContext.SaveChanges();
+                    _logger.LogInformation("Removed Radios: " + resolvedStations.ToString());
+                }
+            }
+            return await Index(searchString);//View("Index");
+
+        }
+
         public IActionResult Privacy()
         {
             return View();

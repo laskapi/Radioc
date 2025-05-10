@@ -1,10 +1,11 @@
-html {
+body,html {
   font-size: 14px;
+  height:100%;
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 16px;
+    font-size: 12px;
   }
 }
 
@@ -30,11 +31,6 @@ body {
   text-align: start;
 }
 
-.row {
-    margin-left: -5px;
-    margin-right: -5px;
-    margin-top: -5px;
-}
 
 .column {
     margin-left: auto;
@@ -42,7 +38,20 @@ body {
     width: 50%;
     padding: 5px;
 }
-.centered{
+.centered {
     text-align: center;
     margin: auto;
+    align-items: center;
+    justify-content: center;
+}
+.submitLink {
+    background-color: transparent;
+    text-decoration: underline;
+    border: none;
+    color: blue;
+    cursor: pointer;
+}
+
+submitLink:focus {
+    outline: none;
 }

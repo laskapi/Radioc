@@ -5,90 +5,133 @@
 }
 
 
-
-<div class="row" id="title">
-	<div class="column centered">
+<div class="container">
+	<div class="mx-auto centered">
 		<h1>Welcome to Radioc</h1>
-		<form asp-controller="Home" asp-action="Index" method="get">
-			<p>
-				<label><b>Search by station</b> <input type="text" asp-for="SearchString" /></label>
-				<input type="submit" value="Filter" />
-			</p>
-		</form>
-	</div>
-	<div class="column centered">
-		<audio controls id="player"></audio>
 	</div>
 
-</div>
-<div>
 
 
+	<div class="row">
 
-	@* <a asp-action="Create">Create New</a> *@
-</div>
+		<div class="col centered" id="title">
 
-<div class="row">
-	<div class="column">
-
-
-		<table class="table table-sm table-hover">
-			<thead class="table-light">
-				<tr>
-					<th class="centered">
-					Name
-					</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var item in Model.Stations)
-				{
-
-					<tr class="station">
-						<td>
-							<div onclick="play(this,'@item.Url')">
-								@Html.DisplayFor(modelItem => item.Name)
-							</div>
-						</td>
-
-						<td>
-							@Html.ActionLink("Add", "Add", new { /* id=item.PrimaryKey */ }) @* | *@
-							@* 		
-							@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-							@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-							@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
- *@					
-</td>
-					</tr>
-				}
-			</tbody>
-		</table>
+			<form asp-controller="Home" asp-action="Index" method="get">
+				<p>
+					<label><b>Search by station</b> <input type="text" asp-for="SearchString" /></label>
+					<input type="submit" value="Filter" />
+				</p>
+			</form>
+		</div>
+		<div class="col">
+		</div>
 	</div>
-	<div class="column">
 
-		<table class="table table-sm table-hover">
-			<thead class="table-light">
-				<tr>
-					<th width="100%" class="centered">
-					My Favorites		
-					</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td >
-						<div>
-							header
-						</div>
-					</td>
-					<td>
-						@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-					</td>
-				</tr>
-			</tbody>
-		</table>
 
+	<div class="row">
+		<div class="col">
+			<div class="row justify-content-center">
+				<div class="col-md-auto">
+
+					<table class="table table-sm table-hover">
+						<thead class="table-light">
+							<tr>
+								<th class="centered">
+									Name
+								</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model.Stations)
+							{
+
+								<tr class="station">
+									<td>
+										<div onclick="play(this,'@item.Url')">
+											@Html.DisplayFor(modelItem => item.Name)
+										</div>
+									</td>
+
+									<td>
+										@if (ViewBag.LoggedIn == true)
+										{
+
+
+											<form asp-action="Add" method="post">
+												<input type="hidden" name="searchString" value="@Model.SearchString" />
+
+												<input type="hidden" name="name" value="@item.Name" />
+												<input type="hidden" name="url" value="@item.Url" />
+											<input type="submit" value="Add" class="submitLink"/>
+											</form>
+
+												
+										@* 		@Html.ActionLink("Add", "Add", new { searchString = Model.SearchString, url = item.Url, name = item.Name })
+ *@
+
+												}
+										</td>
+									</tr>
+										}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="col">
+				<div class="row justify-content-center">
+					<div class="col-10">
+
+
+											@if (ViewBag.LoggedIn == true)
+											{
+							<table class="table table-sm table-hover">
+								<thead class="table-light">
+									<tr>
+										<th width="100%" class="centered">
+											My Favorites
+										</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+														@foreach (var item in Model.Favorites)
+														{
+
+										<tr class="station">
+											<td>
+												<div onclick="play(this,'@item.Url')">
+																		@Html.DisplayFor(modelItem => item.Name)
+												</div>
+											</td>
+											<td>
+																	@Html.ActionLink("Delete", "Delete", new { searchString = Model.SearchString, name = item.Name })
+											</td>
+										</tr>
+														}
+
+
+								</tbody>
+							</table>
+												@if (Model.Favorites.Count() == 0)
+												{
+								<div class="centered">
+									You don't have any favorite stations added yet.
+								</div>
+												}
+											}
+											@if (ViewBag.LoggedIn == false)
+											{
+							<h3>
+								Please login or register to add your favourites stations here.
+							</h3>
+											}
+					</div>
+
+				</div>
+			</div>
+
+		</div>
 	</div>
-</div>

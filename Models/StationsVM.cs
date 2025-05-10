@@ -2,8 +2,9 @@
 {
     public class StationsVM
     {
+        public IEnumerable<Station> Stations { get; set; } = new List<Station>();
 
-        public required IEnumerable<Station> Stations { get; set; }
+        public IEnumerable<FavoriteStation> Favorites { get; set; }=new List<FavoriteStation>();
 
         public string SearchString { get; set; } = "";
     }
