@@ -33,7 +33,7 @@
 			<div class="row justify-content-center">
 				<div class="col-md-auto">
 
-					<table class="table table-sm table-hover">
+					<table class="table table-sm table-hover fixed-header">
 						<thead class="table-light">
 							<tr>
 								<th class="centered">
@@ -63,75 +63,74 @@
 
 												<input type="hidden" name="name" value="@item.Name" />
 												<input type="hidden" name="url" value="@item.Url" />
-											<input type="submit" value="Add" class="submitLink"/>
+												<input type="submit" value="Add" class="submitLink" />
 											</form>
 
-												
-										@* 		@Html.ActionLink("Add", "Add", new { searchString = Model.SearchString, url = item.Url, name = item.Name })
- *@
 
-												}
+		
+
+										}
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="row justify-content-center">
+				<div class="col-md-auto">
+
+
+					@if (ViewBag.LoggedIn == true)
+					{
+						<table class="table table-sm table-hover fixed-header">
+							<thead class="table-light">
+								<tr>
+									<th class="centered">
+										My Favorites
+									</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model.Favorites)
+								{
+
+									<tr class="station">
+										<td>
+											<div onclick="play(this,'@item.Url')">
+												@Html.DisplayFor(modelItem => item.Name)
+											</div>
+										</td>
+										<td>
+											@Html.ActionLink("Delete", "Delete", new { searchString = Model.SearchString, name = item.Name })
 										</td>
 									</tr>
-										}
+								}
+
+
 							</tbody>
 						</table>
-					</div>
+						@if (Model.Favorites.Count() == 0)
+						{
+							<div class="centered">
+								You don't have any favorite stations added yet.
+							</div>
+						}
+					}
+					@if (ViewBag.LoggedIn == false)
+					{
+						<h3>
+							Please login or register to add your favourites stations here.
+						</h3>
+					}
 				</div>
+
 			</div>
-
-			<div class="col">
-				<div class="row justify-content-center">
-					<div class="col-10">
-
-
-											@if (ViewBag.LoggedIn == true)
-											{
-							<table class="table table-sm table-hover">
-								<thead class="table-light">
-									<tr>
-										<th width="100%" class="centered">
-											My Favorites
-										</th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody>
-														@foreach (var item in Model.Favorites)
-														{
-
-										<tr class="station">
-											<td>
-												<div onclick="play(this,'@item.Url')">
-																		@Html.DisplayFor(modelItem => item.Name)
-												</div>
-											</td>
-											<td>
-																	@Html.ActionLink("Delete", "Delete", new { searchString = Model.SearchString, name = item.Name })
-											</td>
-										</tr>
-														}
-
-
-								</tbody>
-							</table>
-												@if (Model.Favorites.Count() == 0)
-												{
-								<div class="centered">
-									You don't have any favorite stations added yet.
-								</div>
-												}
-											}
-											@if (ViewBag.LoggedIn == false)
-											{
-							<h3>
-								Please login or register to add your favourites stations here.
-							</h3>
-											}
-					</div>
-
-				</div>
-			</div>
-
 		</div>
+
 	</div>
+</div>

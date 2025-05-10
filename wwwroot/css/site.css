@@ -1,6 +1,7 @@
 body,html {
   font-size: 14px;
   height:100%;
+  
 }
 
 @media (min-width: 768px) {
@@ -54,4 +55,26 @@ body {
 
 submitLink:focus {
     outline: none;
+}
+
+
+thead,tbody{
+    display:block;
+    
+}
+
+th{
+    width:100%;
+}
+tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: 250px; 
+    
+}
+.fixed-header thead{
+    position: sticky;
+    
+    top: 0;
+    z-index: 1; /* Keep it on top of other rows */
 }

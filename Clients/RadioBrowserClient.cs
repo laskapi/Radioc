@@ -19,7 +19,7 @@ namespace Radioc.Clients
         public async Task<IEnumerable<Station>?> FindStationsAsync(string search)
         {
 
-            var queryString = "search?limit=9&order=votes";
+            var queryString = "search?limit=30&order=votes";
             if (!search.IsNullOrEmpty())
             {
                 queryString+= "&name="+search;
