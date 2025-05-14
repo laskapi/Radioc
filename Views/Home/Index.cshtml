@@ -46,7 +46,7 @@
 							@foreach (var item in Model.Stations)
 							{
 
-								<tr class="station">
+								<tr >
 									<td>
 										<div onclick="play(this,'@item.Url')">
 											@Html.DisplayFor(modelItem => item.Name)
@@ -60,7 +60,6 @@
 
 											<form asp-action="Add" method="post">
 												<input type="hidden" name="searchString" value="@Model.SearchString" />
-
 												<input type="hidden" name="name" value="@item.Name" />
 												<input type="hidden" name="url" value="@item.Url" />
 												<input type="submit" value="Add" class="submitLink" />
@@ -99,14 +98,16 @@
 								@foreach (var item in Model.Favorites)
 								{
 
-									<tr class="station">
+									<tr >
 										<td>
 											<div onclick="play(this,'@item.Url')">
 												@Html.DisplayFor(modelItem => item.Name)
 											</div>
 										</td>
 										<td>
-											@Html.ActionLink("Delete", "Delete", new { searchString = Model.SearchString, name = item.Name })
+											<div>
+											@Html.ActionLink("Delete", "Delete", new { searchString = Model.SearchString, name = item.Name }, new { @class = "submitLink"})
+											</div>
 										</td>
 									</tr>
 								}
