@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using Radioc.Areas.Identity.Data;
+using Radioc.CastingUtils;
 using Radioc.Clients;
 using Radioc.Data;
 using Radioc.Models;
@@ -14,18 +15,16 @@ namespace Radioc.Controllers
 {
     //  [Authorize]
     public class HomeController(ILogger<HomeController> logger, RadioBrowserClient client,
-        ApplicationDbContext dbContext, UserManager<RadiocUser> userManager) : Controller
+        ApplicationDbContext dbContext, UserManager<RadiocUser> userManager,MetaReaderService mReader) : Controller
     {
         private readonly ILogger<HomeController> _logger = logger;
         private readonly RadioBrowserClient _radioBrowserClient = client;
         private readonly ApplicationDbContext _dbContext = dbContext;
         private readonly UserManager<RadiocUser> _userManager = userManager;
-
+        private readonly MetaReaderService mReader = mReader;
 
         public async Task<IActionResult> Index(string SearchString)
         {
-
-            //StationsVM stationsVM = new StationsVM();
 
             var stations = await _radioBrowserClient.FindStationsAsync(SearchString);
 
@@ -81,9 +80,7 @@ namespace Radioc.Controllers
         {
 
             var user = await _userManager.GetUserAsync(User);
-            //    var station = stationsVM.Stations.FirstOrDefault(s => s.Name.Equals(name));
-
-
+           
             if (user != null)
             {
                 var resolvedStations = (from f in _dbContext.FavoriteStations
@@ -100,7 +97,7 @@ namespace Radioc.Controllers
                     _logger.LogInformation("Removed Radios: " + resolvedStations.ToString());
                 }
             }
-            return await Index(searchString);//View("Index");
+            return await Index(searchString);
 
         }
 

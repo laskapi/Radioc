@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Radioc.Clients;
 using Radioc.Data;
 using Radioc.Areas.Identity.Data;
+using Radioc.CastingUtils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,9 @@ builder.Services.AddDefaultIdentity<RadiocUser>(options =>
     options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
+builder.Services.AddScoped<MetaReaderService>();
+builder.Services.AddHttpClient();
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,6 +45,6 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 
-
+app.MapHub<SignalHub>("/Signal");
 
 app.Run();

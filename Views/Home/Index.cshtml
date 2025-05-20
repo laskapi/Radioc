@@ -6,10 +6,19 @@
 
 
 <div class="container">
-	<div class="mx-auto centered">
-		<h1>Welcome to Radioc</h1>
-	</div>
+	@* 	<div class=" mx-auto centered"> *@
+	<div class="d-flex justify-content-center align-items-center">
+		<div>
+			<h1>Welcome to Radioc</h1>
+		</div>
 
+		<div class="mx-3">
+			<button id="playButton" class="btn btn-success btn-lg" onclick="playToggle()">
+				<i id="controlIcon" class=" bi bi-play-circle"></i> Play
+			</button>
+
+		</div>
+	</div>
 
 
 	<div class="row">
@@ -46,9 +55,11 @@
 							@foreach (var item in Model.Stations)
 							{
 
-								<tr >
+								<tr>
 									<td>
-										<div onclick="play(this,'@item.Url')">
+
+										<div onclick="playToggle('@item.Url')">
+
 											@Html.DisplayFor(modelItem => item.Name)
 										</div>
 									</td>
@@ -66,7 +77,7 @@
 											</form>
 
 
-		
+
 
 										}
 									</td>
@@ -98,15 +109,17 @@
 								@foreach (var item in Model.Favorites)
 								{
 
-									<tr >
+									<tr>
 										<td>
-											<div onclick="play(this,'@item.Url')">
+
+
+											<div onclick="playToggle('@item.Url')">
 												@Html.DisplayFor(modelItem => item.Name)
 											</div>
 										</td>
 										<td>
 											<div>
-											@Html.ActionLink("Delete", "Delete", new { searchString = Model.SearchString, name = item.Name }, new { @class = "submitLink"})
+												@Html.ActionLink("Delete", "Delete", new { searchString = Model.SearchString, name = item.Name }, new { @class = "submitLink" })
 											</div>
 										</td>
 									</tr>
@@ -135,3 +148,10 @@
 
 	</div>
 </div>
+<div class=" mr-sm-2">
+	<audio id="player"></audio>
+
+</div>
+
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>

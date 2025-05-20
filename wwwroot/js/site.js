@@ -1,27 +1,46 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿"use strict";
 
-// Write your JavaScript code.
+var intervalId = null;
+var globalUrl = "";
+var connection = new signalR.HubConnectionBuilder().withUrl("/Signal").build();
+connection.start();
 
-function play(element,stationUrl) {
+connection.on("MetaResponse", function (meta) {
+    document.getElementById("playButton").innerText = `${meta}`;
+});
+
+
+function playToggle(url) {
+
+    if (url) {
+        globalUrl = url;
+    }
+
     var player = document.getElementById("player");
- 
-    document.querySelectorAll('.station').forEach(function (row) {
-   //     row.style.background = "#ffffff";
-                row.classList.remove("table-info");
+
+    if (!player.paused && (player.src === url || !url)) {
+        player.pause();
+        clearInterval(intervalId);
+    }
+
+
+    else if (player.src !== globalUrl || player.paused){
+
+        player.src = globalUrl;
+        clearInterval(intervalId);
+        updateMeta(globalUrl);
+        intervalId = setInterval(() => { updateMeta(globalUrl); }, 5000);
+        player.play();
+
+    }
+   
+}
+
+function updateMeta(url) {
+
+    connection.invoke("MetaRequest", url).catch(function (err) {
+        return console.error(err.toString());
     });
 
 
-    var selectedElement = element.closest('.station');   
-    if (!player.paused && player.src == stationUrl) {
- //     selectedElement.style.background = "#ffffff";
-        selectedElement/*.parentNode*/.classList.remove("table-info");
-        player.pause();
-    } else {
-        player.src = stationUrl;
-   //     selectedElement.style.backgroundColor = "#e2d9fa";
-        selectedElement.classList.add("table-info");
-        player.play();
-    }
-  
 }
