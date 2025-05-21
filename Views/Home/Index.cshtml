@@ -5,106 +5,95 @@
 }
 
 
-<div class="container">
-	@* 	<div class=" mx-auto centered"> *@
-	<div class="d-flex justify-content-center align-items-center">
-		<div>
-			<h1>Welcome to Radioc</h1>
-		</div>
+<div class="container ">
 
-		<div class="mx-3">
-			<button id="playButton" class="btn btn-success btn-lg" onclick="playToggle()">
-				<i id="controlIcon" class=" bi bi-play-circle"></i> Play
+	<div class="row text-bg-secondary rounded-2">
+
+
+		<div class="col align-items-baseline p-2">
+			<button id="playButton" class="btn btn-primary btn-lg " onclick="togglePlay()">
+				<i id="playIcon" class=" bi bi-play-circle h3"></i>
 			</button>
 
+			<span id="playText" class="mx-3 h5 text-bg-secondary flex-grow-1 p-2 text-center">Select station please	</span>
 		</div>
+
 	</div>
 
 
-	<div class="row">
+	<div class="container d-grid my-2  subtitle  gap-2">
 
-		<div class="col centered" id="title">
+		<div class="bg-secondary-subtle rounded-2 p-1 centered-item w-75	">
 
-			<form asp-controller="Home" asp-action="Index" method="get">
-				<p>
-					<label><b>Search by station</b> <input type="text" asp-for="SearchString" /></label>
-					<input type="submit" value="Filter" />
-				</p>
+
+			<form class=" " asp-controller="Home" asp-action="Index" method="get">
+				<label><b>Search by name </b> <input type="text" asp-for="SearchString" /></label>
+				<input type="submit" value="Filter" />
 			</form>
-		</div>
-		<div class="col">
-		</div>
-	</div>
 
 
-	<div class="row">
-		<div class="col">
-			<div class="row justify-content-center">
-				<div class="col-md-auto">
-
-					<table class="table table-sm table-hover fixed-header">
-						<thead class="table-light">
-							<tr>
-								<th class="centered">
-									Name
-								</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (var item in Model.Stations)
-							{
-
-								<tr>
-									<td>
-
-										<div onclick="playToggle('@item.Url')">
-
-											@Html.DisplayFor(modelItem => item.Name)
-										</div>
-									</td>
-
-									<td>
-										@if (ViewBag.LoggedIn == true)
-										{
-
-
-											<form asp-action="Add" method="post">
-												<input type="hidden" name="searchString" value="@Model.SearchString" />
-												<input type="hidden" name="name" value="@item.Name" />
-												<input type="hidden" name="url" value="@item.Url" />
-												<input type="submit" value="Add" class="submitLink" />
-											</form>
-
-
-
-
-										}
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				</div>
-			</div>
 		</div>
 
-		<div class="col">
-			<div class="row justify-content-center">
-				<div class="col-md-auto">
+		<div class="d-flex bg-secondary-subtle rounded-2 p-1 centered-item w-75 ">
+
+			<label class="d-block">
+				<b>
+					My Favorites
+				</b>
+			</label>
+
+		</div>
+
+
+
+
+		<div class="centered-item w-50">
+
+			<table class="table table-sm table-hover table-border fixed-header ">
+
+				<tbody >
+					@foreach (var item in Model.Stations)
+					{
+
+						<tr>
+							<td>
+
+								<div onclick="togglePlay('@item.Url')">
+									@Html.DisplayFor(modelItem => item.Name)
+								</div>
+							</td>
+
+							<td>
+								@if (ViewBag.LoggedIn == true)
+								{
+
+
+									<form asp-action="Add" method="post">
+										<input type="hidden" name="searchString" value="@Model.SearchString" />
+										<input type="hidden" name="name" value="@item.Name" />
+										<input type="hidden" name="url" value="@item.Url" />
+										<input type="submit" value="Add" class="submitLink" />
+									</form>
+
+
+
+
+								}
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+
+
+		<div class="centered-item w-50">
 
 
 					@if (ViewBag.LoggedIn == true)
 					{
-						<table class="table table-sm table-hover fixed-header">
-							<thead class="table-light">
-								<tr>
-									<th class="centered">
-										My Favorites
-									</th>
-									<th></th>
-								</tr>
-							</thead>
+						<table class="table table-sm table-border table-hover fixed-header">
+
 							<tbody>
 								@foreach (var item in Model.Favorites)
 								{
@@ -113,8 +102,9 @@
 										<td>
 
 
-											<div onclick="playToggle('@item.Url')">
+											<div onclick="togglePlay('@item.Url')">
 												@Html.DisplayFor(modelItem => item.Name)
+
 											</div>
 										</td>
 										<td>
@@ -137,6 +127,9 @@
 					}
 					@if (ViewBag.LoggedIn == false)
 					{
+						<br />
+						<br />
+						<br />
 						<h3>
 							Please login or register to add your favourites stations here.
 						</h3>
@@ -146,8 +139,7 @@
 			</div>
 		</div>
 
-	</div>
-</div>
+	
 <div class=" mr-sm-2">
 	<audio id="player"></audio>
 

@@ -6,21 +6,25 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/Signal").build();
 connection.start();
 
 connection.on("MetaResponse", function (meta) {
-    document.getElementById("playButton").innerText = `${meta}`;
+    document.getElementById("playText").innerText = `${meta}`;
 });
 
 
-function playToggle(url) {
+function togglePlay(url) {
 
     if (url) {
         globalUrl = url;
     }
 
     var player = document.getElementById("player");
+    var icon = document.getElementById("playIcon");
 
     if (!player.paused && (player.src === url || !url)) {
         player.pause();
         clearInterval(intervalId);
+        icon.classList.remove("bi-stop-circle");
+        icon.classList.add("bi-play-circle");
+
     }
 
 
@@ -29,8 +33,12 @@ function playToggle(url) {
         player.src = globalUrl;
         clearInterval(intervalId);
         updateMeta(globalUrl);
-        intervalId = setInterval(() => { updateMeta(globalUrl); }, 5000);
-        player.play();
+        if (globalUrl) {
+            intervalId = setInterval(() => { updateMeta(globalUrl); }, 5000);
+            player.play();
+            icon.classList.remove("bi-play-circle");
+            icon.classList.add("bi-stop-circle");
+        }
 
     }
    

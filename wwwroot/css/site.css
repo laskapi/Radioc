@@ -53,7 +53,7 @@ body {
     text-decoration: none;
     border-radius: 5px;
     border-style: solid;
-    border-color:chocolate;
+    border-color: chocolate;
     color: Azure;
     cursor: pointer;
 }
@@ -74,12 +74,13 @@ thead, tbody {
 th {
     width: 100%;
 }
+
 td {
-    vertical-align:middle;
+    vertical-align: middle;
 }
 
 tbody {
-    display: block;
+   
     overflow-y: auto;
     max-height: 250px;
 }
@@ -87,5 +88,20 @@ tbody {
 .fixed-header thead {
     position: sticky;
     top: 0;
-    z-index: 1; /* Keep it on top of other rows */
+    z-index: 1;
+}
+
+.table-border{
+    border-top-style: solid;
+    border-bottom-style: solid;
+}
+
+.subtitle{
+    grid-template-columns: 50% 50%;
+
+}
+.centered-item{
+    justify-self:center;
+    justify-content:center;
+    align-items:center;
 }
