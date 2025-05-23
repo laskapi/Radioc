@@ -1,3 +1,16 @@
+/*:root {
+    --main-bg-color: brown;
+    --ight:      #fee591;
+    --dark:       #000002;
+    --primary:    #672513;
+    --secondary:  #ef3994;
+    --info:       #e9ac97;
+    --success:    #60a723;
+    --warning:    #fec16e;
+    --danger:     #f11366;
+
+}*/
+
 body, html {
     font-size: 14px;
     height: 100%;
@@ -20,6 +33,7 @@ html {
 
 body {
     margin-bottom: 60px;
+    background-color: white;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -46,26 +60,6 @@ body {
     justify-content: center;
 }
 
-.submitLink {
-    display: block;
-    margin: 5px;
-    background-color: chocolate;
-    text-decoration: none;
-    border-radius: 5px;
-    border-style: solid;
-    border-color: chocolate;
-    color: Azure;
-    cursor: pointer;
-}
-
-
-    .submitLink:focus {
-        background-color: azure;
-        border-color: azure;
-        color: chocolate;
-    }
-
-
 
 thead, tbody {
     display: block;
@@ -80,9 +74,8 @@ td {
 }
 
 tbody {
-   
     overflow-y: auto;
-    max-height: 250px;
+    max-height: 250px;    
 }
 
 .fixed-header thead {
@@ -91,17 +84,56 @@ tbody {
     z-index: 1;
 }
 
-.table-border{
-    border-top-style: solid;
-    border-bottom-style: solid;
+.table-border {
+    border-top:hidden;
+    border:hidden;        
 }
 
-.subtitle{
+.grid-two {
     grid-template-columns: 50% 50%;
-
 }
-.centered-item{
-    justify-self:center;
-    justify-content:center;
-    align-items:center;
+
+.centered-item {
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    max-height: 250px;
+    overflow: auto;
+}
+
+.gallery-item {
+    margin: 1px;  
+    cursor: pointer;
+    position:relative;
+  }
+
+
+.icon-default {
+    display:block;
+    justify-self: center;    
+    clip-path: circle(50%);
+    aspect-ratio: 1/1;
+    width: 100%;
+    object-fit: contain;
+    padding: 15%;
+}
+
+.icon-image {
+    justify-self: center;
+    aspect-ratio: 1/1;
+    width: 100%;
+    object-fit: contain;
+    
+}
+
+.delete-button {
+    position: absolute;
+    
+    top: 0px;
+    right: 0px;
 }

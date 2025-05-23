@@ -36,6 +36,7 @@ function togglePlay(url) {
         if (globalUrl) {
             intervalId = setInterval(() => { updateMeta(globalUrl); }, 5000);
             player.play();
+            player.onloadedmetadata=(event) => { console.log(event); };
             icon.classList.remove("bi-play-circle");
             icon.classList.add("bi-stop-circle");
         }

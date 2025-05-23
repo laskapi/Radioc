@@ -15,7 +15,7 @@ namespace Radioc.Controllers
 {
     //  [Authorize]
     public class HomeController(ILogger<HomeController> logger, RadioBrowserClient client,
-        ApplicationDbContext dbContext, UserManager<RadiocUser> userManager,MetaReaderService mReader) : Controller
+        ApplicationDbContext dbContext, UserManager<RadiocUser> userManager, MetaReaderService mReader) : Controller
     {
         private readonly ILogger<HomeController> _logger = logger;
         private readonly RadioBrowserClient _radioBrowserClient = client;
@@ -26,7 +26,9 @@ namespace Radioc.Controllers
         public async Task<IActionResult> Index(string SearchString)
         {
 
-            var stations = await _radioBrowserClient.FindStationsAsync(SearchString);
+            var stations =(await _radioBrowserClient.FindStationsAsync(SearchString))?.GroupBy(s=>s.Url).Select(y=>y.First());
+
+
 
             var stationsVM = new StationsVM
             {
@@ -52,9 +54,8 @@ namespace Radioc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(string searchString, string url, string name)
+        public async Task<IActionResult> Add(string searchString, string url, string favicon, string name)
         {
-
             var user = await _userManager.GetUserAsync(User);
 
             if (user != null)
@@ -66,7 +67,18 @@ namespace Radioc.Controllers
 
                 if (!IsAddedAlready)
                 {
-                    var favorite = new FavoriteStation { Name = name, Url = url, RadiocUserId = user.Id, RadiocUser = user };
+                    string verifiedIcon=favicon?[^4..]?? "";
+                    if (verifiedIcon==".png" ||verifiedIcon==".jpg" || verifiedIcon==".ico" || verifiedIcon == ".svg")
+                    {
+                        verifiedIcon = favicon!;
+                    }
+                    else
+                    {
+                        verifiedIcon = "";
+                    }
+                      
+
+                    var favorite = new FavoriteStation { Name = name, Url = url, Favicon = verifiedIcon, RadiocUserId = user.Id, RadiocUser = user };
                     var result = await _dbContext.FavoriteStations.AddAsync(favorite);
                     _dbContext.SaveChanges();
                     _logger.LogInformation("Added Radio: " + result.ToString());
@@ -80,7 +92,7 @@ namespace Radioc.Controllers
         {
 
             var user = await _userManager.GetUserAsync(User);
-           
+
             if (user != null)
             {
                 var resolvedStations = (from f in _dbContext.FavoriteStations

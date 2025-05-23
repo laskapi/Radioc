@@ -11,7 +11,7 @@
 
 
 		<div class="col align-items-baseline p-2">
-			<button id="playButton" class="btn btn-primary btn-lg " onclick="togglePlay()">
+			<button id="playButton" class="btn btn-danger btn-lg " onclick="togglePlay()">
 				<i id="playIcon" class=" bi bi-play-circle h3"></i>
 			</button>
 
@@ -21,7 +21,7 @@
 	</div>
 
 
-	<div class="container d-grid my-2  subtitle  gap-2">
+	<div class="container d-grid my-2  grid-two  gap-2">
 
 		<div class="bg-secondary-subtle rounded-2 p-1 centered-item w-75	">
 
@@ -49,14 +49,14 @@
 
 		<div class="centered-item w-50">
 
-			<table class="table table-sm table-hover table-border fixed-header ">
+			<table class="table table-sm  table-hover table-border fixed-header ">
 
-				<tbody >
+				<tbody>
 					@foreach (var item in Model.Stations)
 					{
 
 						<tr>
-							<td>
+							<td class="w-100">
 
 								<div onclick="togglePlay('@item.Url')">
 									@Html.DisplayFor(modelItem => item.Name)
@@ -72,7 +72,11 @@
 										<input type="hidden" name="searchString" value="@Model.SearchString" />
 										<input type="hidden" name="name" value="@item.Name" />
 										<input type="hidden" name="url" value="@item.Url" />
-										<input type="submit" value="Add" class="submitLink" />
+										<input type="hidden" name="favicon" value="@item.Favicon" />
+
+										<button type="submit" class="btn btn-danger btn-sm mx-1">
+											<i class="bi bi-plus-circle"></i>
+										</button>
 									</form>
 
 
@@ -87,59 +91,62 @@
 		</div>
 
 
-		<div class="centered-item w-50">
+		<div class=" w-100">
 
 
-					@if (ViewBag.LoggedIn == true)
+			@if (ViewBag.LoggedIn == true)
+			{
+				<div class="container gallery-container">
+					@foreach (var item in Model.Favorites)
 					{
-						<table class="table table-sm table-border table-hover fixed-header">
+						<div class="gallery-item rounded-3 btn btn-danger" onclick="togglePlay('@item.Url')">
+							<div>
 
-							<tbody>
-								@foreach (var item in Model.Favorites)
-								{
+								@if (item.Favicon.Length == 0)
+							{
+								<div class=" rounded-3 ">
+									<img class="icon-default bg-dark-subtle rounded-3 " src="~/radio-fm-icon.png">
+								</div>
+							}
+							else
+							{	<img class="icon-image rounded-3" src=@item.Favicon>
+						
+							}
+								@Html.ActionLink("", "Delete", new { searchString = Model.SearchString, name = item.Name },
+																	new { @class = "delete-button btn btn-secondary  bi bi-trash" })
 
-									<tr>
-										<td>
+								</div>
 
+								<p>@item.Name</p>
 
-											<div onclick="togglePlay('@item.Url')">
-												@Html.DisplayFor(modelItem => item.Name)
-
-											</div>
-										</td>
-										<td>
-											<div>
-												@Html.ActionLink("Delete", "Delete", new { searchString = Model.SearchString, name = item.Name }, new { @class = "submitLink" })
-											</div>
-										</td>
-									</tr>
-								}
-
-
-							</tbody>
-						</table>
-						@if (Model.Favorites.Count() == 0)
-						{
-							<div class="centered">
-								You don't have any favorite stations added yet.
-							</div>
-						}
-					}
-					@if (ViewBag.LoggedIn == false)
-					{
-						<br />
-						<br />
-						<br />
-						<h3>
-							Please login or register to add your favourites stations here.
-						</h3>
+							
+						</div>
 					}
 				</div>
 
-			</div>
+
+				@if (Model.Favorites.Count() == 0)
+				{
+					<div class="centered">
+						You don't have any favorite stations added yet.
+					</div>
+				}
+			}
+			@if (ViewBag.LoggedIn == false)
+			{
+				<br />
+				<br />
+				<br />
+				<h3>
+					Please login or register to add your favourites stations here.
+				</h3>
+			}
 		</div>
 
-	
+	</div>
+</div>
+
+
 <div class=" mr-sm-2">
 	<audio id="player"></audio>
 
